@@ -1,5 +1,5 @@
 # Test Mirror Multiplayer Project
-A Test of collaborative work with a simple Mirror Multiplayer test game.
+A test of collaborative work with a simple Mirror Multiplayer test game.
 
 
 ## Changelog
