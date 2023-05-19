@@ -3,16 +3,16 @@ using UnityEngine;
 namespace Mirror.Experimental
 {
     [AddComponentMenu("Network/ Experimental/Network Rigidbody 2D")]
-    [HelpURL("https://mirror-networking.gitbook.io/docs/components/network-rigidbody")]
     public class NetworkRigidbody2D : NetworkBehaviour
     {
         [Header("Settings")]
         [SerializeField] internal Rigidbody2D target = null;
 
         [Tooltip("Set to true if moves come from owner client, set to false if moves always come from server")]
-        public bool clientAuthority = false;
+        public  bool clientAuthority = false;
 
         [Header("Velocity")]
+
         [Tooltip("Syncs Velocity every SyncInterval")]
         [SerializeField] bool syncVelocity = true;
 
@@ -22,7 +22,9 @@ namespace Mirror.Experimental
         [Tooltip("Only Syncs Value if distance between previous and current is great than sensitivity")]
         [SerializeField] float velocitySensitivity = 0.1f;
 
+
         [Header("Angular Velocity")]
+
         [Tooltip("Syncs AngularVelocity every SyncInterval")]
         [SerializeField] bool syncAngularVelocity = true;
 
@@ -40,11 +42,13 @@ namespace Mirror.Experimental
         void OnValidate()
         {
             if (target == null)
+            {
                 target = GetComponent<Rigidbody2D>();
+            }
         }
 
-        #region Sync vars
 
+        #region Sync vars
         [SyncVar(hook = nameof(OnVelocityChanged))]
         Vector2 velocity;
 
@@ -66,9 +70,10 @@ namespace Mirror.Experimental
         /// <summary>
         /// Ignore value if is host or client with Authority
         /// </summary>
+        /// <returns></returns>
         bool IgnoreSync => isServer || ClientWithAuthority;
 
-        bool ClientWithAuthority => clientAuthority && isOwned;
+        bool ClientWithAuthority => clientAuthority && hasAuthority;
 
         void OnVelocityChanged(Vector2 _, Vector2 newValue)
         {
@@ -77,6 +82,7 @@ namespace Mirror.Experimental
 
             target.velocity = newValue;
         }
+
 
         void OnAngularVelocityChanged(float _, float newValue)
         {
@@ -117,24 +123,32 @@ namespace Mirror.Experimental
 
             target.angularDrag = newValue;
         }
-
         #endregion
+
 
         internal void Update()
         {
             if (isServer)
+            {
                 SyncToClients();
+            }
             else if (ClientWithAuthority)
+            {
                 SendToServer();
+            }
         }
 
         internal void FixedUpdate()
         {
             if (clearAngularVelocity && !syncAngularVelocity)
+            {
                 target.angularVelocity = 0f;
+            }
 
             if (clearVelocity && !syncVelocity)
+            {
                 target.velocity = Vector2.zero;
+            }
         }
 
         /// <summary>
@@ -176,7 +190,7 @@ namespace Mirror.Experimental
         [Client]
         void SendToServer()
         {
-            if (!isOwned)
+            if (!hasAuthority)
             {
                 Debug.LogWarning("SendToServer called without authority");
                 return;
@@ -213,9 +227,12 @@ namespace Mirror.Experimental
                 previousValue.velocity = currentVelocity;
             }
 
+
             // only update syncTime if either has changed
             if (angularVelocityChanged || velocityChanged)
+            {
                 previousValue.nextSyncTime = now + syncInterval;
+            }
         }
 
         [Client]
@@ -271,7 +288,9 @@ namespace Mirror.Experimental
             if (syncVelocity)
             {
                 this.velocity = velocity;
+
                 target.velocity = velocity;
+
             }
             this.angularVelocity = angularVelocity;
             target.angularVelocity = angularVelocity;

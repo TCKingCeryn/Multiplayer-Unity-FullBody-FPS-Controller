@@ -19,43 +19,43 @@ namespace Mirror
 
         // ---------------------------------------------------------------------
 
-        // CLIENT (public fields for other components to grab statistics)
+        // CLIENT
         // long bytes to support >2GB
-        [HideInInspector] public int  clientIntervalReceivedPackets;
-        [HideInInspector] public long clientIntervalReceivedBytes;
-        [HideInInspector] public int  clientIntervalSentPackets;
-        [HideInInspector] public long clientIntervalSentBytes;
+        int clientIntervalReceivedPackets;
+        long clientIntervalReceivedBytes;
+        int clientIntervalSentPackets;
+        long clientIntervalSentBytes;
 
         // results from last interval
         // long bytes to support >2GB
-        [HideInInspector] public int  clientReceivedPacketsPerSecond;
-        [HideInInspector] public long clientReceivedBytesPerSecond;
-        [HideInInspector] public int  clientSentPacketsPerSecond;
-        [HideInInspector] public long clientSentBytesPerSecond;
+        int clientReceivedPacketsPerSecond;
+        long clientReceivedBytesPerSecond;
+        int clientSentPacketsPerSecond;
+        long clientSentBytesPerSecond;
 
         // ---------------------------------------------------------------------
 
-        // SERVER (public fields for other components to grab statistics)
+        // SERVER
         // capture interval
         // long bytes to support >2GB
-        [HideInInspector] public int  serverIntervalReceivedPackets;
-        [HideInInspector] public long serverIntervalReceivedBytes;
-        [HideInInspector] public int  serverIntervalSentPackets;
-        [HideInInspector] public long serverIntervalSentBytes;
+        int serverIntervalReceivedPackets;
+        long serverIntervalReceivedBytes;
+        int serverIntervalSentPackets;
+        long serverIntervalSentBytes;
 
         // results from last interval
         // long bytes to support >2GB
-        [HideInInspector] public int  serverReceivedPacketsPerSecond;
-        [HideInInspector] public long serverReceivedBytesPerSecond;
-        [HideInInspector] public int  serverSentPacketsPerSecond;
-        [HideInInspector] public long serverSentBytesPerSecond;
+        int serverReceivedPacketsPerSecond;
+        long serverReceivedBytesPerSecond;
+        int serverSentPacketsPerSecond;
+        long serverSentBytesPerSecond;
 
-        // NetworkManager sets Transport.active in Awake().
+        // NetworkManager sets Transport.activeTransport in Awake().
         // so let's hook into it in Start().
         void Start()
         {
             // find available transport
-            Transport transport = Transport.active;
+            Transport transport = Transport.activeTransport;
             if (transport != null)
             {
                 transport.OnClientDataReceived += OnClientReceive;
@@ -69,7 +69,7 @@ namespace Mirror
         void OnDestroy()
         {
             // remove transport hooks
-            Transport transport = Transport.active;
+            Transport transport = Transport.activeTransport;
             if (transport != null)
             {
                 transport.OnClientDataReceived -= OnClientReceive;
@@ -147,8 +147,8 @@ namespace Mirror
             if (NetworkClient.active || NetworkServer.active)
             {
                 // create main GUI area
-                // 120 is below NetworkManager HUD in all cases.
-                GUILayout.BeginArea(new Rect(10, 120, 215, 300));
+                // 105 is below NetworkManager HUD in all cases.
+                GUILayout.BeginArea(new Rect(10, 105, 215, 300));
 
                 // show client / server stats if active
                 if (NetworkClient.active) OnClientGUI();

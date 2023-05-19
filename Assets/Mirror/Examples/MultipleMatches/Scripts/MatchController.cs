@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,6 +51,7 @@ namespace Mirror.Examples.MultipleMatch
             matchPlayerData.Add(player2, new MatchPlayerData { playerIndex = CanvasController.playerInfos[player2.connectionToClient].playerIndex });
         }
 
+
         public override void OnStartClient()
         {
             matchPlayerData.Callback += UpdateWins;
@@ -64,7 +64,6 @@ namespace Mirror.Examples.MultipleMatch
             playAgainButton.gameObject.SetActive(false);
         }
 
-        [ClientCallback]
         public void UpdateGameUI(NetworkIdentity _, NetworkIdentity newPlayerTurn)
         {
             if (!newPlayerTurn) return;
@@ -81,13 +80,16 @@ namespace Mirror.Examples.MultipleMatch
             }
         }
 
-        [ClientCallback]
         public void UpdateWins(SyncDictionary<NetworkIdentity, MatchPlayerData>.Operation op, NetworkIdentity key, MatchPlayerData matchPlayerData)
         {
             if (key.gameObject.GetComponent<NetworkIdentity>().isLocalPlayer)
+            {
                 winCountLocal.text = $"Player {matchPlayerData.playerIndex}\n{matchPlayerData.wins}";
+            }
             else
+            {
                 winCountOpponent.text = $"Player {matchPlayerData.playerIndex}\n{matchPlayerData.wins}";
+            }
         }
 
         [Command(requiresAuthority = false)]
@@ -126,7 +128,6 @@ namespace Mirror.Examples.MultipleMatch
 
         }
 
-        [ServerCallback]
         bool CheckWinner(CellValue currentScore)
         {
             if ((currentScore & CellValue.TopRow) == CellValue.TopRow)
@@ -158,6 +159,7 @@ namespace Mirror.Examples.MultipleMatch
         [ClientRpc]
         public void RpcShowWinner(NetworkIdentity winner)
         {
+
             foreach (CellGUI cellGUI in MatchCells.Values)
                 cellGUI.GetComponent<Button>().interactable = false;
 
@@ -176,13 +178,12 @@ namespace Mirror.Examples.MultipleMatch
                 gameText.text = "Loser!";
                 gameText.color = Color.red;
             }
-
             exitButton.gameObject.SetActive(true);
             playAgainButton.gameObject.SetActive(true);
         }
 
         // Assigned in inspector to ReplayButton::OnClick
-        [ClientCallback]
+        [Client]
         public void RequestPlayAgain()
         {
             playAgainButton.gameObject.SetActive(false);
@@ -193,7 +194,9 @@ namespace Mirror.Examples.MultipleMatch
         public void CmdPlayAgain(NetworkConnectionToClient sender = null)
         {
             if (!playAgain)
+            {
                 playAgain = true;
+            }
             else
             {
                 playAgain = false;
@@ -201,7 +204,7 @@ namespace Mirror.Examples.MultipleMatch
             }
         }
 
-        [ServerCallback]
+        [Server]
         public void RestartGame()
         {
             foreach (CellGUI cellGUI in MatchCells.Values)
@@ -250,23 +253,23 @@ namespace Mirror.Examples.MultipleMatch
             StartCoroutine(ServerEndMatch(sender, false));
         }
 
-        [ServerCallback]
         public void OnPlayerDisconnected(NetworkConnectionToClient conn)
         {
             // Check that the disconnecting client is a player in this match
             if (player1 == conn.identity || player2 == conn.identity)
+            {
                 StartCoroutine(ServerEndMatch(conn, true));
+            }
         }
 
-        [ServerCallback]
         public IEnumerator ServerEndMatch(NetworkConnectionToClient conn, bool disconnected)
         {
-            RpcExitGame();
-
             canvasController.OnPlayerDisconnected -= OnPlayerDisconnected;
 
-            // Wait for the ClientRpc to get out ahead of object destruction
-            yield return new WaitForSeconds(0.1f);
+            RpcExitGame();
+
+            // Skip a frame so the message goes out ahead of object destruction
+            yield return null;
 
             // Mirror will clean up the disconnecting client so we only need to clean up the other remaining client.
             // If both players are just returning to the Lobby, we need to remove both connection Players
