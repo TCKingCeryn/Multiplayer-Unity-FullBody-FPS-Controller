@@ -3,7 +3,9 @@ A collaborative test project with a simple Mirror Multiplayer game.  Built to te
 
 Includes basic Room setup, i.e. "Waiting for Players," as well as direct Host/Client connection.  Right now limited to Local IPV4 machine for testing.
 
-![dsadasd](https://github.com/TCKingCeryn/Test-Mirror-Multiplayer-Project/assets/128671881/e8fa0a65-c449-4d77-aacf-315e84d3f32b)
+![asfasfa](https://github.com/TCKingCeryn/Test-Mirror-Multiplayer-Project/assets/128671881/c4e91dc4-346f-4e82-840c-cc53c251cdb9)
+
+![sdfsdfsd](https://github.com/TCKingCeryn/Test-Mirror-Multiplayer-Project/assets/128671881/5333bf4b-7409-4fa3-ad61-3f905352e0f6)
 
 ![asdasd](https://github.com/TCKingCeryn/Test-Mirror-Multiplayer-Project/assets/128671881/e0cc33c2-73e4-4b46-8dce-8274fc458cef)
 
