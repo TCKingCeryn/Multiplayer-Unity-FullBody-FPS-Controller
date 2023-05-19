@@ -5,6 +5,8 @@ Built on my Free Open-Source FullBody FPS Controller, found here:
 https://github.com/TCKingCeryn/Darktide-40K-in-Unity-FullBody-FPS-Controller
 
 
+Includes basic Room setup, i.e. "Waiting for Players," as well as direct Host/Client connection.  Right now limited to Local IPV4 machine for testing.
+
 ![dsadasd](https://github.com/TCKingCeryn/Test-Mirror-Multiplayer-Project/assets/128671881/e8fa0a65-c449-4d77-aacf-315e84d3f32b)
 
 
