@@ -111,7 +111,7 @@ namespace Mirror.Authenticators
             }
 
             // send the deviceUniqueIdentifier to the server
-            NetworkClient.Send(new AuthRequestMessage { clientDeviceID = deviceUniqueIdentifier } );
+            NetworkClient.connection.Send(new AuthRequestMessage { clientDeviceID = deviceUniqueIdentifier } );
         }
 
         /// <summary>

@@ -68,8 +68,7 @@ namespace Mirror.Examples.SnapshotInterpolationDemo
         void Send(Vector3 position)
         {
             // create snapshot
-            // Unity 2019 doesn't have Time.timeAsDouble yet
-            Snapshot3D snap = new Snapshot3D(NetworkTime.localTime, 0, position);
+            Snapshot3D snap = new Snapshot3D(Time.timeAsDouble, 0, position);
 
             // simulate packet loss
             bool drop = random.NextDouble() < loss;
@@ -82,8 +81,7 @@ namespace Mirror.Examples.SnapshotInterpolationDemo
 
                 // simulate latency
                 float simulatedLatency = SimulateLatency();
-                // Unity 2019 doesn't have Time.timeAsDouble yet
-                double deliveryTime = NetworkTime.localTime + simulatedLatency;
+                double deliveryTime = Time.timeAsDouble + simulatedLatency;
                 queue.Insert(index, (deliveryTime, snap));
             }
         }
@@ -94,9 +92,7 @@ namespace Mirror.Examples.SnapshotInterpolationDemo
             for (int i = 0; i < queue.Count; ++i)
             {
                 (double deliveryTime, Snapshot3D snap) = queue[i];
-
-                // Unity 2019 doesn't have Time.timeAsDouble yet
-                if (NetworkTime.localTime >= deliveryTime)
+                if (Time.timeAsDouble >= deliveryTime)
                 {
                     client.OnMessage(snap);
                     queue.RemoveAt(i);

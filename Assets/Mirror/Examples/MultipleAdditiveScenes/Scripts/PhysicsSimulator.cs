@@ -26,9 +26,10 @@ namespace Mirror.Examples.MultipleAdditiveScenes
             }
         }
 
-        [ServerCallback]
         void FixedUpdate()
         {
+            if (!NetworkServer.active) return;
+
             if (simulatePhysicsScene)
                 physicsScene.Simulate(Time.fixedDeltaTime);
 

@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 185921129}
   - component: {fileID: 185921128}
+  - component: {fileID: 185921127}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -140,6 +141,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!81 &185921127
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185921126}
+  m_Enabled: 1
 --- !u!20 &185921128
 Camera:
   m_ObjectHideFlags: 0
@@ -166,8 +175,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
-  orthographic size: 15
+  orthographic: 0
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -287,6 +296,7 @@ GameObject:
   - component: {fileID: 1074858615}
   - component: {fileID: 1074858614}
   - component: {fileID: 1074858618}
+  - component: {fileID: 1074858619}
   m_Layer: 0
   m_Name: Network
   m_TagString: Untagged
@@ -308,6 +318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offsetX: 0
   offsetY: 0
+  PlayerName: 
 --- !u!114 &1074858615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,13 +336,13 @@ MonoBehaviour:
   NoDelay: 1
   Interval: 10
   Timeout: 10000
-  RecvBufferSize: 7361536
-  SendBufferSize: 7361536
   FastResend: 2
-  ReceiveWindowSize: 4096
+  CongestionWindow: 0
   SendWindowSize: 4096
+  ReceiveWindowSize: 4096
   MaxRetransmit: 40
-  MaximizeSocketBuffers: 1
+  NonAlloc: 1
+  MaximizeSendReceiveBuffersToOSLimit: 1
   ReliableMaxMessageSize: 298449
   UnreliableMaxMessageSize: 1199
   debugLog: 0
@@ -352,8 +363,7 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   runInBackground: 1
   autoStartServerBuild: 1
-  autoConnectClientBuild: 0
-  sendRate: 30
+  serverTickRate: 30
   offlineScene: Assets/Mirror/Examples/AdditiveLevels/Scenes/Offline.unity
   onlineScene: Assets/Mirror/Examples/AdditiveLevels/Scenes/Online.unity
   transport: {fileID: 1074858615}
@@ -363,18 +373,10 @@ MonoBehaviour:
   playerPrefab: {fileID: 7619140271685878370, guid: 9f0094c1325091d42a558274b947221f, type: 3}
   autoCreatePlayer: 0
   playerSpawnMethod: 1
-  spawnPrefabs: []
-  snapshotSettings:
-    bufferTimeMultiplier: 2
-    catchupNegativeThreshold: -1
-    catchupPositiveThreshold: 1
-    catchupSpeed: 0.019999999552965164
-    slowdownSpeed: 0.03999999910593033
-    driftEmaDuration: 1
-    dynamicAdjustment: 1
-    dynamicAdjustmentTolerance: 1
-    deliveryTimeEmaDuration: 2
-  timeInterpolationGui: 0
+  spawnPrefabs:
+  - {fileID: 3181899219042528418, guid: 7c6a0a278eba11e44b9a86cd4da603df, type: 3}
+  - {fileID: 2188792038427236743, guid: e588080aa542be54d9ca9d5c734dc9ee, type: 3}
+  - {fileID: 1098173225717622925, guid: c624c75494b4d7d4086b9212f897e56a, type: 3}
   additiveScenes:
   - Assets/Mirror/Examples/AdditiveLevels/Scenes/SubLevel1.unity
   - Assets/Mirror/Examples/AdditiveLevels/Scenes/SubLevel2.unity
@@ -405,6 +407,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b979f26c95d34324ba005bfacfa9c4fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1074858619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074858613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8aea0e7e97cb8345883cb2051d27fc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1300359889
@@ -438,9 +452,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 363a8867bb9c7b845a73233566df8c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 1
   fadeImage: {fileID: 1040404845}
   fadeColor: {r: 0, g: 0, b: 0, a: 1}
-  stepRate: 2
 --- !u!114 &1300359892
 MonoBehaviour:
   m_ObjectHideFlags: 0

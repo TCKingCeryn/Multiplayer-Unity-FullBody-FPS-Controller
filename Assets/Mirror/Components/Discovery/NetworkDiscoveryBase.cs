@@ -23,46 +23,29 @@ namespace Mirror.Discovery
     {
         public static bool SupportedOnThisPlatform { get { return Application.platform != RuntimePlatform.WebGLPlayer; } }
 
-        [SerializeField]
-        [Tooltip("If true, broadcasts a discovery request every ActiveDiscoveryInterval seconds")]
-        public bool enableActiveDiscovery = true;
-
-        // broadcast address needs to be configurable on iOS:
-        // https://github.com/vis2k/Mirror/pull/3255
-        [Tooltip("iOS may require LAN IP address here (e.g. 192.168.x.x), otherwise leave blank.")]
-        public string BroadcastAddress = "";
+        // each game should have a random unique handshake,  this way you can tell if this is the same game or not
+        [HideInInspector]
+        public long secretHandshake;
 
         [SerializeField]
         [Tooltip("The UDP port the server will listen for multi-cast messages")]
         protected int serverBroadcastListenPort = 47777;
 
         [SerializeField]
+        [Tooltip("If true, broadcasts a discovery request every ActiveDiscoveryInterval seconds")]
+        public bool enableActiveDiscovery = true;
+
+        [SerializeField]
         [Tooltip("Time in seconds between multi-cast messages")]
         [Range(1, 60)]
         float ActiveDiscoveryInterval = 3;
-        
-        [Tooltip("Transport to be advertised during discovery")]
-        public Transport transport;
-
-        [Tooltip("Invoked when a server is found")]
-        public ServerFoundUnityEvent OnServerFound;
-
-        // Each game should have a random unique handshake,
-        // this way you can tell if this is the same game or not
-        [HideInInspector]
-        public long secretHandshake;
-
-        public long ServerId { get; private set; }
 
         protected UdpClient serverUdpClient;
         protected UdpClient clientUdpClient;
 
 #if UNITY_EDITOR
-        public virtual void OnValidate()
+        void OnValidate()
         {
-            if (transport == null)
-                transport = GetComponent<Transport>();
-
             if (secretHandshake == 0)
             {
                 secretHandshake = RandomLong();
@@ -71,30 +54,22 @@ namespace Mirror.Discovery
         }
 #endif
 
-        /// <summary>
-        /// virtual so that inheriting classes' Start() can call base.Start() too
-        /// </summary>
-        public virtual void Start()
-        {
-            ServerId = RandomLong();
-
-            // active transport gets initialized in Awake
-            // so make sure we set it here in Start() after Awake
-            // Or just let the user assign it in the inspector
-            if (transport == null)
-                transport = Transport.active;
-
-            // Server mode? then start advertising
-#if UNITY_SERVER
-            AdvertiseServer();
-#endif
-        }
-
         public static long RandomLong()
         {
             int value1 = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
             int value2 = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
             return value1 + ((long)value2 << 32);
+        }
+
+        /// <summary>
+        /// virtual so that inheriting classes' Start() can call base.Start() too
+        /// </summary>
+        public virtual void Start()
+        {
+            // Server mode? then start advertising
+#if UNITY_SERVER
+            AdvertiseServer();
+#endif
         }
 
         // Ensure the ports are cleared no matter when Game/Unity UI exits
@@ -187,7 +162,9 @@ namespace Mirror.Discovery
                     // socket has been closed
                     break;
                 }
-                catch (Exception) {}
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -266,7 +243,6 @@ namespace Mirror.Discovery
         AndroidJavaObject multicastLock;
         bool hasMulticastLock;
 #endif
-
         void BeginMulticastLock()
 		{
 #if UNITY_ANDROID
@@ -392,18 +368,6 @@ namespace Mirror.Discovery
             }
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Broadcast, serverBroadcastListenPort);
-            
-            if (!string.IsNullOrWhiteSpace(BroadcastAddress))
-            {
-                try
-                {
-                    endPoint = new IPEndPoint(IPAddress.Parse(BroadcastAddress), serverBroadcastListenPort);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
-            }
 
             using (NetworkWriterPooled writer = NetworkWriterPool.Get())
             {

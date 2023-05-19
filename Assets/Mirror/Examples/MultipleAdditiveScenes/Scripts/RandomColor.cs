@@ -6,6 +6,7 @@ namespace Mirror.Examples.MultipleAdditiveScenes
     {
         public override void OnStartServer()
         {
+            base.OnStartServer();
             color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
         }
 

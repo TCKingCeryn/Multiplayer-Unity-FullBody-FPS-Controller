@@ -153,9 +153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneId: 1317994002
-  _assetId: 0
   serverOnly: 0
   visible: 0
+  m_AssetId: 
   hasSpawned: 0
 --- !u!4 &126437274
 Transform:
@@ -787,10 +787,6 @@ PrefabInstance:
     - target: {fileID: 3141292696673982546, guid: c624c75494b4d7d4086b9212f897e56a, type: 3}
       propertyPath: sceneId
       value: 1143465467
-      objectReference: {fileID: 0}
-    - target: {fileID: 3141292696673982546, guid: c624c75494b4d7d4086b9212f897e56a, type: 3}
-      propertyPath: serverOnly
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5948271423698091598, guid: c624c75494b4d7d4086b9212f897e56a, type: 3}
       propertyPath: startPosition.x
