@@ -442,7 +442,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d7575ecd04b156441a05f11c94d5eeba, type: 3}
   - {fileID: 8300000, guid: 5364890b843136c49af2d33fc65d926b, type: 3}
   - {fileID: 8300000, guid: 38a335ce586d2234db23b12ac2d8e630, type: 3}
-  damageSounds: []
   IsBigHit: 1
   impactParticles: []
   impactBloodParticles: []
@@ -1294,7 +1293,6 @@ MonoBehaviour:
   RightArmsOffset: {x: 0, y: 0, z: -90}
   LeftFingersOffset: {x: 90, y: 0, z: 90}
   RightFingersOffset: {x: -90, y: 0, z: -90}
-  LockFullbodyArms: 1
   _fullBodyRig:
     LeftShoulder: {fileID: 4341360076211543404}
     LeftArm: {fileID: 2545446518456869510}
@@ -8769,8 +8767,8 @@ GameObject:
   - component: {fileID: 1356456410424407489}
   - component: {fileID: 3161044013422187}
   - component: {fileID: 1356456410420379075}
-  - component: {fileID: 5181499716469309875}
   - component: {fileID: 3161044013422186}
+  - component: {fileID: 5181499716469309875}
   m_Layer: 8
   m_Name: Mirror_FPSPlayerController
   m_TagString: Player
@@ -9092,57 +9090,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5181499716469309875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356456410420379073}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66586c5f247ed274b973dae7f7074d0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0
-  LockCursor: 1
-  PlayerArmsController: {fileID: 8683838134294569169}
-  PlayerBodyController: {fileID: 3161044013422186}
-  healthControl: {fileID: 1356456410420379075}
-  HUDController: {fileID: 0}
-  BodyAnimator: {fileID: 1356456410429791879}
-  ArmsAnimator: {fileID: 98931320481985769}
-  BlockButton: 325
-  KickButton: 102
-  kickTime: 0.8
-  KickTrigger: {fileID: 3161043875995195}
-  DamageCrosshair: {fileID: 7391342248865467244, guid: 9ba0143cf5f425545a4c53a62305145c, type: 3}
-  DamageCrosshairHolder: {fileID: 0}
-  UseRandomDialogue: 0
-  DialoguePercentageChance: 0.5
-  DialogueAudioSource: {fileID: 3278493726463116253}
-  DialogueAudioClips: []
-  DialogueHUDTexts: []
-  ChatWindow: {fileID: 0}
-  playerName: Player
-  playerNameText: []
-  MainCam: {fileID: 3708053819632517688}
-  _cam: {fileID: 4069804464354178789}
-  weaponsSwapTime: 0.25
-  equippedWeaponIndex: 0
-  weapons:
-  - {fileID: 2327587799725440569}
-  - {fileID: 7172861551493852638}
-  - {fileID: 6136974465765275362}
-  - {fileID: 3878778326796047665}
-  - {fileID: 1356456410114192127}
-  - {fileID: 112515479696912732}
-  - {fileID: 1356456411363166779}
-  CurrentShootPosition: {x: 0, y: 0, z: 0}
-  CurrentShootForwardVector: {x: 0, y: 0, z: 0}
-  CurrentShootUpVector: {x: 0, y: 0, z: 0}
-  CurrentShootRightVector: {x: 0, y: 0, z: 0}
 --- !u!114 &3161044013422186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9186,6 +9133,60 @@ MonoBehaviour:
   slideTime: 0.8
   m_RunCycleLegOffset: 0.2
   m_AnimSpeedMultiplier: 1
+--- !u!114 &5181499716469309875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356456410420379073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66586c5f247ed274b973dae7f7074d0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
+  LockCursor: 1
+  PlayerArmsController: {fileID: 8683838134294569169}
+  PlayerBodyController: {fileID: 3161044013422186}
+  healthControl: {fileID: 1356456410420379075}
+  HUDController: {fileID: 0}
+  BodyAnimator: {fileID: 1356456410429791879}
+  ArmsAnimator: {fileID: 98931320481985769}
+  BlockButton: 325
+  KickButton: 102
+  kickTime: 0.8
+  KickTrigger: {fileID: 3161043875995195}
+  DamageCrosshair: {fileID: 7391342248865467244, guid: 9ba0143cf5f425545a4c53a62305145c, type: 3}
+  DamageCrosshairHolder: {fileID: 0}
+  UseRandomDialogue: 0
+  DialoguePercentageChance: 0.5
+  DialogueAudioSource: {fileID: 3278493726463116253}
+  DialogueAudioClips: []
+  DialogueHUDTexts: []
+  ChatWindow: {fileID: 0}
+  playerName: Player
+  playerNameText: []
+  MainCam: {fileID: 3708053819632517688}
+  _cam: {fileID: 4069804464354178789}
+  ToggleCursorButton: 120
+  CursorSprite: {fileID: 0}
+  weaponsSwapTime: 0.25
+  equippedWeaponIndex: 0
+  weapons:
+  - {fileID: 2327587799725440569}
+  - {fileID: 7172861551493852638}
+  - {fileID: 6136974465765275362}
+  - {fileID: 3878778326796047665}
+  - {fileID: 1356456410114192127}
+  - {fileID: 112515479696912732}
+  - {fileID: 1356456411363166779}
+  LockFullbodyArms: 0
+  CurrentShootPosition: {x: 0, y: 0, z: 0}
+  CurrentShootForwardVector: {x: 0, y: 0, z: 0}
+  CurrentShootUpVector: {x: 0, y: 0, z: 0}
+  CurrentShootRightVector: {x: 0, y: 0, z: 0}
 --- !u!1 &1356456410524337131
 GameObject:
   m_ObjectHideFlags: 0
@@ -14439,8 +14440,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7db4aa7a1af2871419f0d1e5873a5f2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerArmsController: {fileID: 8683838134294569169}
-  sniperAimSensitivty: 0.7
+  PlayerController: {fileID: 5181499716469309875}
+  Weapon: {fileID: 1356456411363166779}
+  SniperCam: {fileID: 7722910786172910874}
   blackLensAnim: {fileID: 1356456409944262208}
 --- !u!82 &1356456411363166777
 AudioSource:
@@ -20145,7 +20147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4481765008700197861
 Transform:
   m_ObjectHideFlags: 0
@@ -20821,7 +20823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5426393223576215383
 Transform:
   m_ObjectHideFlags: 0
@@ -21076,7 +21078,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d7575ecd04b156441a05f11c94d5eeba, type: 3}
   - {fileID: 8300000, guid: 5364890b843136c49af2d33fc65d926b, type: 3}
   - {fileID: 8300000, guid: 38a335ce586d2234db23b12ac2d8e630, type: 3}
-  damageSounds: []
   IsBigHit: 0
   impactParticles:
   - {fileID: 947488135204848535, guid: be2c95819fdf9a042ac7bdf1f6604765, type: 3}
@@ -21403,7 +21404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7858989659273531507
 Transform:
   m_ObjectHideFlags: 0
@@ -21431,7 +21432,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3708053819632517688}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -22311,10 +22312,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d7575ecd04b156441a05f11c94d5eeba, type: 3}
   - {fileID: 8300000, guid: 5364890b843136c49af2d33fc65d926b, type: 3}
   - {fileID: 8300000, guid: 38a335ce586d2234db23b12ac2d8e630, type: 3}
-  - {fileID: 8300000, guid: 65f21c75892327e459f1bc1edc1f8abf, type: 3}
-  - {fileID: 8300000, guid: 9c0ba969c91f0d84d8c4ad5c9e0e222e, type: 3}
-  - {fileID: 8300000, guid: 4ed03f33c63b6b0488e2a894a911168b, type: 3}
-  damageSounds:
   - {fileID: 8300000, guid: 65f21c75892327e459f1bc1edc1f8abf, type: 3}
   - {fileID: 8300000, guid: 9c0ba969c91f0d84d8c4ad5c9e0e222e, type: 3}
   - {fileID: 8300000, guid: 4ed03f33c63b6b0488e2a894a911168b, type: 3}
@@ -33925,7 +33922,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d7575ecd04b156441a05f11c94d5eeba, type: 3}
   - {fileID: 8300000, guid: 5364890b843136c49af2d33fc65d926b, type: 3}
   - {fileID: 8300000, guid: 38a335ce586d2234db23b12ac2d8e630, type: 3}
-  damageSounds: []
   IsBigHit: 0
   impactParticles:
   - {fileID: 947488135204848535, guid: be2c95819fdf9a042ac7bdf1f6604765, type: 3}
@@ -34063,10 +34059,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 120f03dda7f144249afd526577f41d56, type: 3}
   - {fileID: 8300000, guid: 839c6083bf6b97f479c9536cbabe097c, type: 3}
   - {fileID: 8300000, guid: c3f695322831e4b4bbbf3fbf7166a65b, type: 3}
-  - {fileID: 8300000, guid: d7575ecd04b156441a05f11c94d5eeba, type: 3}
-  - {fileID: 8300000, guid: 5364890b843136c49af2d33fc65d926b, type: 3}
-  - {fileID: 8300000, guid: 38a335ce586d2234db23b12ac2d8e630, type: 3}
-  damageSounds:
   - {fileID: 8300000, guid: d7575ecd04b156441a05f11c94d5eeba, type: 3}
   - {fileID: 8300000, guid: 5364890b843136c49af2d33fc65d926b, type: 3}
   - {fileID: 8300000, guid: 38a335ce586d2234db23b12ac2d8e630, type: 3}
@@ -49978,10 +49970,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 65f21c75892327e459f1bc1edc1f8abf, type: 3}
   - {fileID: 8300000, guid: 9c0ba969c91f0d84d8c4ad5c9e0e222e, type: 3}
   - {fileID: 8300000, guid: 4ed03f33c63b6b0488e2a894a911168b, type: 3}
-  damageSounds:
-  - {fileID: 8300000, guid: 120f03dda7f144249afd526577f41d56, type: 3}
-  - {fileID: 8300000, guid: 839c6083bf6b97f479c9536cbabe097c, type: 3}
-  - {fileID: 8300000, guid: c3f695322831e4b4bbbf3fbf7166a65b, type: 3}
   IsBigHit: 1
   impactParticles:
   - {fileID: 947488135204848535, guid: be2c95819fdf9a042ac7bdf1f6604765, type: 3}
@@ -50650,7 +50638,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8780495430914263451
 Transform:
   m_ObjectHideFlags: 0
@@ -50673,7 +50661,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8884583038040566076}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}

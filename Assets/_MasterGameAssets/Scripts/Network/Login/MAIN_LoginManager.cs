@@ -13,10 +13,6 @@ namespace PlanetMaenad.FPS
         public MAIN_ChatAuthenticator ChatAuthenticator;
         [Space(10)]
 
-        public KeyCode ToggleCursorButton = KeyCode.X;
-        public Texture2D CursorSprite;
-        public bool ShowCursor = true;
-        [Space(10)]
 
 
         public GameObject LoginUI;
@@ -26,61 +22,14 @@ namespace PlanetMaenad.FPS
 
         public static MAIN_LoginManager instance;
 
-        internal WaitForSeconds TinyDelay = new WaitForSeconds(0.1f);
-        internal WaitForSeconds SmallDelay = new WaitForSeconds(0.2f);
-        internal WaitForSeconds MedDelay = new WaitForSeconds(0.5f);
-
-        internal WaitForEndOfFrame WaitForEndOfFrameDelay;
 
 
         void Awake()
         {
             instance = this;
         }
-        void Start()
-        {
-            if (ShowCursor)
-            {
-                if (CursorSprite) Cursor.SetCursor(CursorSprite, Vector2.zero, CursorMode.Auto);
-
-                //ToggleCursor();
-            }
-        }
-        void Update()
-        {
-            if (Input.GetKeyDown(ToggleCursorButton))
-            {
-                ToggleCursor();
-            }
-        }
 
 
-        public void ToggleCursor()
-        {
-            if (Cursor.visible == false)
-            {
-                StartCoroutine(ToggleCursorDelay(true));
-            }
-            if (Cursor.visible == true)
-            {
-                StartCoroutine(ToggleCursorDelay(false));
-            }
-        }
-        IEnumerator ToggleCursorDelay(bool Bool)
-        {
-            yield return WaitForEndOfFrameDelay;
-
-            if (Bool == true)
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
-            if (Bool == false)
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-        }
 
         public void SetNewName(string PlayerName)
         {
@@ -100,16 +49,16 @@ namespace PlanetMaenad.FPS
             {
                 NetworkManager.StartHost();
 
-                LoginUI.SetActive(false);
+                //LoginUI.SetActive(false);
             }
         }
         public void StartClient()
         {
-            if (!NetworkClient.active)
+            if (!NetworkClient.active)// && NetworkManager.isNetworkActive)
             {
                 NetworkManager.StartClient();
 
-                LoginUI.SetActive(false);
+                //LoginUI.SetActive(false);
             }
         }
 
