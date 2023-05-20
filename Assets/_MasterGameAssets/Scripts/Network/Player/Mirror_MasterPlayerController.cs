@@ -11,10 +11,10 @@ namespace PlanetMaenad.FPS
         public bool LockCursor = true;
         [Space(10)]
 
-        public FPSArmsController PlayerArmsController;
-        public FPSBodyController PlayerBodyController;
+        public Mirror_FPSArmsController PlayerArmsController;
+        public Mirror_FPSBodyController PlayerBodyController;
         public Mirror_HealthController healthControl;
-        public HealthUIController HUDController;
+        public HUDController HUDController;
         //public DEMOKillCounter KillCounter;
         [Space(5)]
         public Animator BodyAnimator;
@@ -55,11 +55,23 @@ namespace PlanetMaenad.FPS
         public Camera _cam;
         [Space(10)]
 
+
+        public KeyCode ToggleCursorButton = KeyCode.X;
+        public Texture2D CursorSprite;
+        [Space(10)]
+
+
         public float weaponsSwapTime = .25f;
         [SyncVar]
         public int equippedWeaponIndex = 0;
-        public FPSWeapon[] weapons;
+        public Mirror_FPSWeapon[] weapons;
         [Space(10)]
+
+
+        [SyncVar]
+        public bool LockFullbodyArms;
+        [Space(10)]
+
 
         [SyncVar]
         public Vector3 CurrentShootPosition;
@@ -75,6 +87,13 @@ namespace PlanetMaenad.FPS
         internal float DialogueTimer = 0f;
         internal bool IsBlocking;
         internal static readonly HashSet<string> playerNames = new HashSet<string>();
+
+
+        internal WaitForSeconds TinyDelay = new WaitForSeconds(0.1f);
+        internal WaitForSeconds SmallDelay = new WaitForSeconds(0.2f);
+        internal WaitForSeconds MedDelay = new WaitForSeconds(0.5f);
+        internal WaitForEndOfFrame WaitForEndOfFrameDelay;
+
 
 
 
@@ -100,7 +119,7 @@ namespace PlanetMaenad.FPS
             }
 
 
-            if (!HUDController) HUDController = GameObject.FindGameObjectWithTag("HUD").GetComponent<HealthUIController>();
+            if (!HUDController) HUDController = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDController>();
             healthControl.HUDController = HUDController;
             DamageCrosshairHolder = HUDController.DamageCrosshairHolder;
             //if (!KillCounter) KillCounter = GameObject.FindGameObjectWithTag("KillCounter").GetComponent<DEMOKillCounter>();
@@ -128,6 +147,8 @@ namespace PlanetMaenad.FPS
             //Is Local Player
             if (isLocalPlayer)
             {
+                if (CursorSprite) Cursor.SetCursor(CursorSprite, Vector2.zero, CursorMode.Auto);
+
                 CmdChangeWeapon();             
 
                 if (LockCursor)
@@ -200,6 +221,12 @@ namespace PlanetMaenad.FPS
             if (Input.GetKeyUp(BlockButton))
             {
                 BlockInput(false);
+            }
+
+            //Cursor
+            if (Input.GetKeyDown(ToggleCursorButton))
+            {
+                ToggleCursor();
             }
 
         }
@@ -304,7 +331,7 @@ namespace PlanetMaenad.FPS
 
             Invoke("SwapWeapons", weaponsSwapTime);
 
-            foreach (FPSWeapon weapon in weapons)
+            foreach (Mirror_FPSWeapon weapon in weapons)
             {
                 weapon.swapping = true;
             }
@@ -358,7 +385,7 @@ namespace PlanetMaenad.FPS
             ArmsAnimator.SetFloat("MoveSetID", selectedWeapon.MoveSetID);
 
 
-            foreach (FPSWeapon weapon in weapons)
+            foreach (Mirror_FPSWeapon weapon in weapons)
             {
                 weapon.swapping = false;
             }
@@ -420,7 +447,43 @@ namespace PlanetMaenad.FPS
             }
         }
 
+
+
+        public void ToggleCursor()
+        {
+            if (Cursor.visible == false)
+            {
+                StartCoroutine(ToggleCursorDelay(true));
+            }
+            if (Cursor.visible == true)
+            {
+                StartCoroutine(ToggleCursorDelay(false));
+            }
+        }
+        IEnumerator ToggleCursorDelay(bool Bool)
+        {
+            yield return WaitForEndOfFrameDelay;
+
+            if (Bool == true)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            if (Bool == false)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
+
+
         #endregion
+
+        [Command(requiresAuthority = false)]
+        public void CmdSetLockFullbodyArms(bool Bool)
+        {
+            LockFullbodyArms = Bool;
+        }
 
 
         #region Arms Controls
