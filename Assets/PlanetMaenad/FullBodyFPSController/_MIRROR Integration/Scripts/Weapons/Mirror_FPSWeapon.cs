@@ -19,9 +19,7 @@ namespace PlanetMaenad.FPS
         public KeyCode AttackButton = KeyCode.Mouse0;
         public KeyCode AimButton = KeyCode.Mouse1;
 
-        public bool UseFPSArmsConstant = true;
-        public bool UseFPSArmsOnAttack = true;
-        public bool UseFPSArmsOnAim = true;
+        public bool UseFPSArms = true;
         [Space(10)]
 
 
@@ -51,7 +49,6 @@ namespace PlanetMaenad.FPS
 
         public bool attacking;
         public bool swapping;
-        public bool sprinting;
         public bool aiming;
         [Space(10)]
 
@@ -75,11 +72,11 @@ namespace PlanetMaenad.FPS
             if (WeaponAdjust) WeaponAdjust.enabled = false;
             if (WeaponAdjust) WeaponAdjust.enabled = true;
 
-            if (UseFPSArmsConstant)
+            if (UseFPSArms)
             {
                 if (PlayerController) PlayerController.CmdSetLockFullbodyArms(true);
             }
-            if (!UseFPSArmsConstant)
+            if (!UseFPSArms)
             {
                 if (PlayerController) PlayerController.CmdSetLockFullbodyArms(false);
             }
@@ -115,14 +112,10 @@ namespace PlanetMaenad.FPS
                     {
                         float randomAttackFloat = Random.Range(MinRandom, MaxRandom);
                         PlayerController.ArmsAnimator.SetFloat("RandomAttackID", randomAttackFloat);
-                        PlayerController.ArmsAnimator.Play("RandomAttack");
+                        PlayerController.CmdPlayArmsAnimation("RandomAttack");
                     }
 
-                    if (UseFPSArmsOnAttack && !UseFPSArmsConstant)
-                    {
-                        PlayerController.CmdSetLockFullbodyArms(true);
-                    }
-
+                
                     if (Hitboxes.Length > 0)
                     {
                         for (int i = 0; i < Hitboxes.Length; i++)
@@ -134,12 +127,7 @@ namespace PlanetMaenad.FPS
                     attacking = true;
                 }
                 if (Input.GetKeyUp(AttackButton) && Weapon == WeaponTypes.Melee)
-                {
-                    if (UseFPSArmsOnAttack && !UseFPSArmsConstant)
-                    {
-                        PlayerController.CmdSetLockFullbodyArms(false);
-                    }
-
+                {                 
                     if (Hitboxes.Length > 0)
                     {
                         for (int i = 0; i < Hitboxes.Length; i++)
@@ -150,20 +138,9 @@ namespace PlanetMaenad.FPS
 
                     attacking = false;
                 }
-
-                //Sprint
-                if (Input.GetKey(KeyCode.LeftShift) && !aiming && !Cursor.visible)
-                {
-                    sprinting = true;
-                }
-                if (Input.GetKeyUp(KeyCode.LeftShift))
-                {
-                    sprinting = false;
-                }
-
+             
                 //PlayerAnimators
                 if (!UseRandomAttack) PlayerController.ArmsAnimator.SetBool("Attack", attacking);
-                PlayerController.ArmsAnimator.SetBool("Sprint", sprinting);
             }
 
             
@@ -175,11 +152,7 @@ namespace PlanetMaenad.FPS
                 //Aiming
                 if (Input.GetKeyDown(AimButton) && aimFinished && !swapping && !Cursor.visible)
                 {
-                    if (UseFPSArmsOnAim && !UseFPSArmsConstant)
-                    {
-                        PlayerController.CmdSetLockFullbodyArms(true);
-                    }
-
+                   
                     PlayerController.MainCam.transform.localEulerAngles = aimCamOffset;
 
                     originalAimOffsetCamPos = aimCamPosition;
@@ -194,11 +167,7 @@ namespace PlanetMaenad.FPS
                 }
                 else if (Input.GetKeyUp(AimButton) && aiming && !swapping)
                 {
-                    if (UseFPSArmsOnAim && !UseFPSArmsConstant)
-                    {
-                        PlayerController.CmdSetLockFullbodyArms(false);
-                    }
-
+                  
                     PlayerController.MainCam.transform.localEulerAngles = Vector3.zero;
 
                     aiming = false;

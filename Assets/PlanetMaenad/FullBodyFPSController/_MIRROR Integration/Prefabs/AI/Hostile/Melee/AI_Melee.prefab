@@ -498,9 +498,9 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d145fd94f0083bd4b8d309a36a5e89dd, type: 2}
-  - {fileID: 2100000, guid: c14340ce5d2adb34082f60532cd615dc, type: 2}
-  - {fileID: 2100000, guid: f9ca95a287a05024895634ba2e10b583, type: 2}
+  - {fileID: 2100000, guid: d665a9e8c7fdd9b4194d9bb5b6733bf6, type: 2}
+  - {fileID: 2100000, guid: f4da123275555104fb126c560d74d537, type: 2}
+  - {fileID: 2100000, guid: 52f8b44de7c856544901377edb11278d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2749,26 +2749,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  IsServerInstance: 0
   _rigidbody: {fileID: 134218451275648803}
   agent: {fileID: 9214187229313394561}
   m_Animator: {fileID: 2482787481085798214}
   HealthControl: {fileID: 9214187229313394560}
-  CurrentVelocity: 0
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
+  MoveWhileAttacking: 1
   UseWander: 1
-  wanderPoint: {x: 0, y: 0, z: 0}
-  MoveSpeed: 1.75
+  wanderSpeed: 1.75
   wanderRadius: 5
-  moving: 0
-  isAttacking: 0
-  m_ForwardAmount: 0
-  m_TurnAmount: 0
+  wanderTimer: 10
+  CurrentVelocity: 0
   targetInSightRange: 0
   targetInAttackRange: 0
-  overrideAttack: 0
   CurrentTarget: {fileID: 0}
+  PotentialTargets: []
+  UseDetect: 1
   DetectEyes: {fileID: 653526233}
   DetectionLayers:
     serializedVersion: 2
@@ -2783,8 +2782,6 @@ MonoBehaviour:
   AttackDistance: 2
   _randomAttacks: []
   IsAttacking: 0
-  CanAttack: 1
-  MoveWhileAttacking: 1
   OnAttack:
     m_PersistentCalls:
       m_Calls: []

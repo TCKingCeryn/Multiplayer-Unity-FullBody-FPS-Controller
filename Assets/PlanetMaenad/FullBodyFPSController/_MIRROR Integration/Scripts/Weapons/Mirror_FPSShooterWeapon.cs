@@ -114,11 +114,11 @@ namespace PlanetMaenad.FPS
             if (WeaponAdjust) WeaponAdjust.enabled = false;
             if (WeaponAdjust) WeaponAdjust.enabled = true;
 
-            if (UseFPSArmsConstant)
+            if (UseFPSArms)
             {
                 if (PlayerController) PlayerController.CmdSetLockFullbodyArms(true);
             }
-            if (!UseFPSArmsConstant)
+            if (!UseFPSArms)
             {
                 if (PlayerController) PlayerController.CmdSetLockFullbodyArms(false);
             }
@@ -143,11 +143,7 @@ namespace PlanetMaenad.FPS
                 //Shoot
                 if (Input.GetKeyDown(AttackButton) && !PlayerController.IsBlocking && !firing && !reloading && bulletsInMag > 0 && !cycling && !swapping && !Cursor.visible)
                 {
-                    if (UseFPSArmsOnAttack && !UseFPSArmsConstant)
-                    {
-                        PlayerController.CmdSetLockFullbodyArms(true);
-                    }
-
+                 
                     firing = true;
 
                     foreach (ParticleSystem ps in muzzleFlashes)
@@ -203,10 +199,7 @@ namespace PlanetMaenad.FPS
                 }
                 else if (firing && (Input.GetKeyUp(AttackButton) || bulletsInMag == 0))
                 {
-                    if (UseFPSArmsOnAttack && !UseFPSArmsConstant)
-                    {
-                        PlayerController.CmdSetLockFullbodyArms(false);
-                    }
+                
 
                     firing = false;
                     recoilSemi = false;
@@ -216,16 +209,6 @@ namespace PlanetMaenad.FPS
                     {
                         StopCoroutine(lastRoutine);
                     }
-                }
-
-                //Sprint
-                if (Input.GetKey(KeyCode.LeftShift) && !PlayerController.IsBlocking && !aiming && !Cursor.visible)
-                {
-                    sprinting = true;
-                }
-                if (Input.GetKeyUp(KeyCode.LeftShift))
-                {
-                    sprinting = false;
                 }
 
                 //Reload
@@ -245,10 +228,8 @@ namespace PlanetMaenad.FPS
                 if (CurrentAmmoTextMesh) CurrentAmmoTextMesh.text = bulletsInMag.ToString();
                 if (MaxAmmoTextMesh) MaxAmmoTextMesh.text = totalBullets.ToString();
 
-
                 //Animators
                 PlayerController.ArmsAnimator.SetBool("Shoot", firing);
-                PlayerController.ArmsAnimator.SetBool("Sprint", sprinting);
             }          
         }
 
@@ -297,7 +278,7 @@ namespace PlanetMaenad.FPS
                                 var parentHealth = hitTransform.gameObject.GetComponentInParent<Mirror_HealthController>();
                                 if (parentHealth.gameObject != PlayerController.gameObject)
                                 {
-                                    PlayerController.CmdPassDamage(parentHealth.gameObject, hit.point, hitForce, Damage);
+                                    if (parentHealth.gameObject != null) PlayerController.CmdPassDamage(parentHealth.gameObject, hit.point, hitForce, Damage);
 
                                     if (hitSounds.Length > 0)
                                     {

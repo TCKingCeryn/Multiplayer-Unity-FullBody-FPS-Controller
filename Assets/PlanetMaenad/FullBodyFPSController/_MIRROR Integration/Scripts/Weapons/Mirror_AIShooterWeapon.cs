@@ -265,8 +265,8 @@ namespace PlanetMaenad.FPS
                             {
                                 var parentHealth = hitTransform.gameObject.GetComponentInParent<Mirror_HealthController>();
                                 if (parentHealth.gameObject != gameObject)
-                                {                                 
-                                    parentHealth.Damage(transform.forward * 360, hitForce, Damage);
+                                {
+                                    if (parentHealth.gameObject != null) parentHealth.Damage(transform.forward * 360, hitForce, Damage);
 
                                     if (hitSounds.Length > 0)
                                     {

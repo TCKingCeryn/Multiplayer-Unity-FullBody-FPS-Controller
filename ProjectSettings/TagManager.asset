@@ -9,6 +9,12 @@ TagManager:
   - KillCounter
   - HUD
   - ChatWindow
+  - Concrete
+  - Metal
+  - Gravel
+  - Door
+  - Grass
+  - Trigger
   layers:
   - Default
   - TransparentFX

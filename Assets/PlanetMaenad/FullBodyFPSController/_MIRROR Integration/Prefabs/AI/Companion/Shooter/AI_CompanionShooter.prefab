@@ -1695,26 +1695,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  IsServerInstance: 0
   _rigidbody: {fileID: 4425820612613839564}
   agent: {fileID: 4857172789080093294}
   m_Animator: {fileID: 2216853566629507753}
   HealthControl: {fileID: 4857172789080093295}
-  CurrentVelocity: 0
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
-  UseWander: 0
-  wanderPoint: {x: 0, y: 0, z: 0}
-  MoveSpeed: 1.75
+  MoveWhileAttacking: 1
+  UseWander: 1
+  wanderSpeed: 1.75
   wanderRadius: 5
-  moving: 0
-  isAttacking: 0
-  m_ForwardAmount: 0
-  m_TurnAmount: 0
+  wanderTimer: 10
+  CurrentVelocity: 0
   targetInSightRange: 0
   targetInAttackRange: 0
-  overrideAttack: 0
   CurrentTarget: {fileID: 0}
+  PotentialTargets: []
+  UseDetect: 1
   DetectEyes: {fileID: 6977630241986747270}
   DetectionLayers:
     serializedVersion: 2
@@ -1725,11 +1724,9 @@ MonoBehaviour:
   DetectionRadius: 75
   UseAttacks: 1
   AttackFrequencyTimer: 5
-  AttackDistance: 10
+  AttackDistance: 75
   _randomAttacks: []
   IsAttacking: 0
-  CanAttack: 1
-  MoveWhileAttacking: 1
   OnAttack:
     m_PersistentCalls:
       m_Calls: []
@@ -2890,6 +2887,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5198266977667229907}
     m_Modifications:
+    - target: {fileID: 3181476078816848080, guid: 2cd3eaaba64e5c94f8696eed49b768ac, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4130339495378965578, guid: 2cd3eaaba64e5c94f8696eed49b768ac, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -2937,6 +2938,10 @@ PrefabInstance:
     - target: {fileID: 4366216335793924939, guid: 2cd3eaaba64e5c94f8696eed49b768ac, type: 3}
       propertyPath: m_Name
       value: HealthCanvas (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6890373459590277139, guid: 2cd3eaaba64e5c94f8696eed49b768ac, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cd3eaaba64e5c94f8696eed49b768ac, type: 3}

@@ -8,29 +8,43 @@ using Mirror;
 
 public class Mirror_AIGPUController : NetworkBehaviour
 {
+    public bool IsServerInstance;
+    [Space(10)]
+
     public Rigidbody _rigidbody;
     public NavMeshAgent agent;
     public DemoGPU_Animator GPUMeshAnimator;
     public Mirror_HealthController HealthControl;
+    [Space(10)]
+
+
+
+    public LayerMask groundLayers = -1;
+    [Space(10)]
+
+
+
+    public bool UseWander;
+    public float wanderSpeed = 1.5f;
+    public float wanderRadius = 15;
+    public float wanderTimer = 10;
     [Space(5)]
     public float CurrentVelocity;
     [Space(10)]
 
 
-    public bool UseWander;
-    [Space(5)]
-    public float wanderSpeed = 1.5f;
-    public float wanderRadius = 15;
-    public float wanderTimer = 10;
-    [Space(5)]
     public string[] IdleNames;
     public string[] WalkNames;
     [Space(10)]
 
 
 
+
     public Transform CurrentTarget;
+    public Collider[] PotentialTargets;
+
     [Space(5)]
+    public bool UseDetect = true;
     public Transform DetectEyes;
     public LayerMask DetectionLayers;
     public string[] DetectionTags;
@@ -41,12 +55,13 @@ public class Mirror_AIGPUController : NetworkBehaviour
 
 
 
+
+
     public bool UseAttacks;
     public float AttackFrequencyTimer = 2f;
     public float AttackDistance = 2f;
     public RandomAttack[] _randomAttacks;
     [Space(5)]
-    public bool CanAttack = true;
     public bool IsAttacking;
     [Space(10)]
 
@@ -71,7 +86,7 @@ public class Mirror_AIGPUController : NetworkBehaviour
     internal Transform target;
     internal float timer;
     internal bool IsWalking;
-
+    internal bool CanAttack = true;
 
 
     internal float AnimationOffset;
@@ -86,7 +101,6 @@ public class Mirror_AIGPUController : NetworkBehaviour
     internal WaitForSeconds DetectionFrequency;
     internal WaitForSeconds AttackFrequency;
 
-    internal Collider[] PotentialTargets;
     internal GameObject HitObject;
 
 
@@ -106,6 +120,8 @@ public class Mirror_AIGPUController : NetworkBehaviour
         DetectionFrequencyTimer = UnityEngine.Random.Range(DetectionFrequencyTimer - 0.25f, _randomAttacks.Length + 0.25f);
         DetectionFrequency = new WaitForSeconds(DetectionFrequencyTimer);
         AttackFrequency = new WaitForSeconds(AttackFrequencyTimer);
+
+        IsServerInstance = isServer;
 
         StartCoroutine(CheckForTargets());
     }
@@ -188,96 +204,100 @@ public class Mirror_AIGPUController : NetworkBehaviour
         {
             yield return DetectionFrequency;
 
-            PotentialTargets = Physics.OverlapSphere(transform.position, DetectionRadius, DetectionLayers);
-
-            //Found Colliders
-            if (PotentialTargets.Length > 0)
+            if(UseDetect)
             {
-                //Check Each Tags
-                for (int i = 0; i < DetectionTags.Length; i++)
+                PotentialTargets = Physics.OverlapSphere(transform.position, DetectionRadius, DetectionLayers);
+
+                //Found Colliders
+                if (PotentialTargets.Length > 0)
                 {
-                    //Tag Match
-                    if (PotentialTargets[0].transform.CompareTag(DetectionTags[i]))
+                    //Check Each Tags
+                    for (int i = 0; i < DetectionTags.Length; i++)
                     {
-                        CurrentTarget = PotentialTargets[0].transform;
-
-                        Vector3 rayOrigin = DetectEyes.position;
-                        RaycastHit hit;
-                        var rayDirection = CurrentTarget.position - DetectEyes.position;
-
-                        //Hits an Object
-                        if (Physics.Raycast(rayOrigin, rayDirection, out hit, DetectionRadius + 1, DetectionLayers))
+                        //Tag Match
+                        if (PotentialTargets[0].transform.CompareTag(DetectionTags[i]))
                         {
-                            var hitTransform = hit.collider.transform;
+                            CurrentTarget = PotentialTargets[0].transform;
 
-                            //Can See Target
-                            if (hitTransform == CurrentTarget)
+                            Vector3 rayOrigin = DetectEyes.position;
+                            RaycastHit hit;
+                            var rayDirection = CurrentTarget.position - DetectEyes.position;
+
+                            //Hits an Object
+                            if (Physics.Raycast(rayOrigin, rayDirection, out hit, DetectionRadius + 1, DetectionLayers))
                             {
-                                agent.SetDestination(CurrentTarget.position);
+                                var hitTransform = hit.collider.transform;
+
+                                //Can See Target
+                                if (hitTransform == CurrentTarget)
+                                {
+                                    agent.SetDestination(CurrentTarget.position);
+
+                                    if (UseAttacks)
+                                    {
+                                        StartCoroutine(CheckAttackDistance());
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //No Target Found
+                                CurrentTarget = null;
+
+                                selectedIdle = IdleNames[Random.Range(0, IdleNames.Length)];
+                                selectedWalk = WalkNames[Random.Range(0, WalkNames.Length)];
 
                                 if (UseAttacks)
                                 {
-                                    StartCoroutine(CheckAttackDistance());
+                                    StopCoroutine(CheckAttackDistance());
+                                    StopCoroutine(AttackResetDelay());
+
+                                    CanAttack = true;
+                                    IsAttacking = false;
+
+                                    Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+
+                                    if (UseWander) agent.SetDestination(newPos);
                                 }
                             }
+
                         }
-                        else
-                        {
-                            //No Target Found
-                            CurrentTarget = null;
+                    }
+                }
 
-                            selectedIdle = IdleNames[Random.Range(0, IdleNames.Length)];
-                            selectedWalk = WalkNames[Random.Range(0, WalkNames.Length)];
+                //No Target Found
+                if (PotentialTargets.Length == 0)
+                {
+                    CurrentTarget = null;
 
-                            if (UseAttacks)
-                            {
-                                StopCoroutine(CheckAttackDistance());
-                                StopCoroutine(AttackResetDelay());
+                    selectedIdle = IdleNames[Random.Range(0, IdleNames.Length)];
+                    selectedWalk = WalkNames[Random.Range(0, WalkNames.Length)];
 
-                                CanAttack = true;
-                                IsAttacking = false;
+                    if (UseAttacks)
+                    {
+                        StopCoroutine(CheckAttackDistance());
+                        StopCoroutine(AttackResetDelay());
 
-                                Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+                        CanAttack = true;
+                        IsAttacking = false;
 
-                                if (UseWander) agent.SetDestination(newPos);
-                            }
-                        }
+                        Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
 
+                        if (UseWander) agent.SetDestination(newPos);
+                    }
+                }
+
+                if (CurrentTarget != null)
+                {
+                    agent.SetDestination(CurrentTarget.position);
+
+                    if (UseAttacks && !IsAttacking)
+                    {
+                        StartCoroutine(CheckAttackDistance());
                     }
                 }
             }
-
-            //No Target Found
-            if (PotentialTargets.Length == 0)
-            {
-                CurrentTarget = null;
-
-                selectedIdle = IdleNames[Random.Range(0, IdleNames.Length)];
-                selectedWalk = WalkNames[Random.Range(0, WalkNames.Length)];
-
-                if (UseAttacks)
-                {
-                    StopCoroutine(CheckAttackDistance());
-                    StopCoroutine(AttackResetDelay());
-
-                    CanAttack = true;
-                    IsAttacking = false;
-
-                    Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-
-                    if (UseWander) agent.SetDestination(newPos);
-                }
-            }
-
-            if (CurrentTarget != null)
-            {
-                agent.SetDestination(CurrentTarget.position);
-
-                if (UseAttacks && !IsAttacking)
-                {
-                    StartCoroutine(CheckAttackDistance());
-                }
-            }
+           
         }
     }
     IEnumerator CheckAttackDistance()
@@ -286,24 +306,28 @@ public class Mirror_AIGPUController : NetworkBehaviour
         {
             yield return AttackFrequencyTimer;
 
-            //Has Target
-            if (CurrentTarget)
+            if (UseDetect)
             {
-                float dist = Vector3.Distance(CurrentTarget.position, transform.position);
-
-                if (dist < AttackDistance)
+                //Has Target
+                if (CurrentTarget)
                 {
-                    if (CanAttack && !IsAttacking)
+                    float dist = Vector3.Distance(CurrentTarget.position, transform.position);
+
+                    if (dist < AttackDistance)
                     {
-                        CanAttack = false;
-                        IsAttacking = true;
+                        if (CanAttack && !IsAttacking)
+                        {
+                            CanAttack = false;
+                            IsAttacking = true;
 
-                        DoRandomAttack();
+                            DoRandomAttack();
 
-                        StartCoroutine(AttackResetDelay());
+                            StartCoroutine(AttackResetDelay());
+                        }
                     }
                 }
             }
+            
         }
     }
 

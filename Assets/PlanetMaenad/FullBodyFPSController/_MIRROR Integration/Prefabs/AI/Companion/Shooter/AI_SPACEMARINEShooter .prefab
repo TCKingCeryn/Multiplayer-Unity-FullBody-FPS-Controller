@@ -1304,26 +1304,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  IsServerInstance: 0
   _rigidbody: {fileID: 1626934744500804812}
   agent: {fileID: 7536633275440886894}
   m_Animator: {fileID: 3836077805754873001}
   HealthControl: {fileID: 7536633275440886895}
-  CurrentVelocity: 0
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
+  MoveWhileAttacking: 1
   UseWander: 1
-  wanderPoint: {x: 0, y: 0, z: 0}
-  MoveSpeed: 3
+  wanderSpeed: 1
   wanderRadius: 5
-  moving: 0
-  isAttacking: 0
-  m_ForwardAmount: 0
-  m_TurnAmount: 0
+  wanderTimer: 10
+  CurrentVelocity: 0
   targetInSightRange: 0
   targetInAttackRange: 0
-  overrideAttack: 0
   CurrentTarget: {fileID: 0}
+  PotentialTargets: []
+  UseDetect: 1
   DetectEyes: {fileID: 7470965026224992133}
   DetectionLayers:
     serializedVersion: 2
@@ -1334,11 +1333,9 @@ MonoBehaviour:
   DetectionRadius: 75
   UseAttacks: 1
   AttackFrequencyTimer: 5
-  AttackDistance: 50
+  AttackDistance: 20
   _randomAttacks: []
   IsAttacking: 0
-  CanAttack: 1
-  MoveWhileAttacking: 1
   OnAttack:
     m_PersistentCalls:
       m_Calls: []
@@ -1772,6 +1769,10 @@ PrefabInstance:
     - target: {fileID: 140975769334134418, guid: 7a0d1f3ba42817a48ad31fc7c3c95eae, type: 3}
       propertyPath: m_Name
       value: AIRifle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877177307267018684, guid: 7a0d1f3ba42817a48ad31fc7c3c95eae, type: 3}
+      propertyPath: Damage
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 6877177307267018684, guid: 7a0d1f3ba42817a48ad31fc7c3c95eae, type: 3}
       propertyPath: AIAnimator

@@ -29,8 +29,8 @@ namespace PlanetMaenad.FPS
 
         public bool IsGrounded;
         public bool IsCrouching;
-        public bool IsSliding;
         public bool IsSprinting;
+        public bool IsSliding;
         [Space(5)]
         public LayerMask GroundLayers;
         public float GroundedOffset = -0.14f;
@@ -341,6 +341,9 @@ namespace PlanetMaenad.FPS
                 _animator.SetFloat("Turn", m_TurnAmount * 0.3f, 0.1f, Time.deltaTime);
                 _animator.SetBool("Crouch", IsCrouching);
 
+
+                PlayerController.ArmsAnimator.SetBool("Sprint", IsSprinting);
+
             }
 
             if (!IsGrounded)
@@ -360,15 +363,15 @@ namespace PlanetMaenad.FPS
             }
 
 
-            //if (IsGrounded && move.magnitude > 0)
-            //{
-                //_animator.speed = m_AnimSpeedMultiplier;
-            //}
-            //else
-            //{
-                // don't use that while airborne
-                //_animator.speed = 1;
-            //}
+            if (IsGrounded && move.magnitude > 0)
+            {
+                _animator.speed = m_AnimSpeedMultiplier;
+            }
+            else
+            {
+                //don't use that while airborne
+                _animator.speed = 1;
+            }
         }
 
         public void StandardMove()

@@ -16,6 +16,7 @@ namespace PlanetMaenad.FPS
         //public GameObject MainCam;
         [Space(10)]
 
+        public Transform ArmsPivot;
         public Transform MiddleSpineBone;
         [Space(5)]
         public float Sensitivity = 10f;
@@ -171,14 +172,13 @@ namespace PlanetMaenad.FPS
         }
 
 
-        //void LateUpdate()
-        //{
-        //    CameraRotate();
-        //    HandleLockBones();
-        //}
+        void Start()
+        {
+            
+        }
 
 
-        public void CameraRotate()
+        public void LocalCameraRotate()
         {
             //Get input to turn the cam view
             relativeYaw = Input.GetAxis("Mouse X") * Sensitivity;
@@ -187,50 +187,55 @@ namespace PlanetMaenad.FPS
             yaw += Input.GetAxis("Mouse X") * Sensitivity;
             pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
-            transform.eulerAngles = new Vector3(pitch, yaw, 0f);
-            transform.position = MiddleSpineBone.position;
-
+            ArmsPivot.transform.eulerAngles = new Vector3(pitch, yaw, 0f);
+            ArmsPivot.transform.position = MiddleSpineBone.position;
 
             //Rotate Spine 
-            if (MiddleSpineBone) MiddleSpineBone.rotation = transform.rotation;
+            if (MiddleSpineBone) MiddleSpineBone.rotation = ArmsPivot.transform.rotation;
+        }
+        public void NonLocalCameraRotate()
+        {
+            //ArmsPivot.transform.eulerAngles = new Vector3(pitch, yaw, 0f);
+            ArmsPivot.transform.position = MiddleSpineBone.position;
+
+            //Rotate Spine 
+            if (MiddleSpineBone) MiddleSpineBone.rotation = ArmsPivot.transform.rotation;
         }
         public void HandleLockBones()
         {
-            if (PlayerController.LockFullbodyArms)
-            {
-                _fullBodyRig.LeftShoulder.position = _FPSBodyRig.LeftShoulder.position;
-                _fullBodyRig.LeftShoulder.rotation = _FPSBodyRig.LeftShoulder.rotation * Quaternion.Euler(-90, -90, LeftShoulderOffset.z);
+            _fullBodyRig.LeftShoulder.position = _FPSBodyRig.LeftShoulder.position;
+            _fullBodyRig.LeftShoulder.rotation = _FPSBodyRig.LeftShoulder.rotation * Quaternion.Euler(-90, -90, LeftShoulderOffset.z);
 
-                _fullBodyRig.LeftArm.position = _FPSBodyRig.LeftArm.position;
-                _fullBodyRig.LeftArm.rotation = _FPSBodyRig.LeftArm.rotation * Quaternion.Euler(LeftArmsOffset);
+            _fullBodyRig.LeftArm.position = _FPSBodyRig.LeftArm.position;
+            _fullBodyRig.LeftArm.rotation = _FPSBodyRig.LeftArm.rotation * Quaternion.Euler(LeftArmsOffset);
 
-                _fullBodyRig.LeftForeArm.position = _FPSBodyRig.LeftForeArm.position;
-                _fullBodyRig.LeftForeArm.rotation = _FPSBodyRig.LeftForeArm.rotation * Quaternion.Euler(LeftArmsOffset);
+            _fullBodyRig.LeftForeArm.position = _FPSBodyRig.LeftForeArm.position;
+            _fullBodyRig.LeftForeArm.rotation = _FPSBodyRig.LeftForeArm.rotation * Quaternion.Euler(LeftArmsOffset);
 
-                _fullBodyRig.LeftHand.position = _FPSBodyRig.LeftHand.position;
-                _fullBodyRig.LeftHand.rotation = _FPSBodyRig.LeftHand.rotation * Quaternion.Euler(LeftArmsOffset);
+            _fullBodyRig.LeftHand.position = _FPSBodyRig.LeftHand.position;
+            _fullBodyRig.LeftHand.rotation = _FPSBodyRig.LeftHand.rotation * Quaternion.Euler(LeftArmsOffset);
 
 
 
-                _fullBodyRig.LeftHandThumb1.rotation = _FPSBodyRig.LeftHandThumb1.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandThumb2.rotation = _FPSBodyRig.LeftHandThumb2.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandThumb3.rotation = _FPSBodyRig.LeftHandThumb3.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandThumb1.rotation = _FPSBodyRig.LeftHandThumb1.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandThumb2.rotation = _FPSBodyRig.LeftHandThumb2.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandThumb3.rotation = _FPSBodyRig.LeftHandThumb3.rotation * Quaternion.Euler(LeftFingersOffset);
 
-                _fullBodyRig.LeftHandIndex1.rotation = _FPSBodyRig.LeftHandIndex1.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandIndex2.rotation = _FPSBodyRig.LeftHandIndex2.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandIndex3.rotation = _FPSBodyRig.LeftHandIndex3.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandIndex1.rotation = _FPSBodyRig.LeftHandIndex1.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandIndex2.rotation = _FPSBodyRig.LeftHandIndex2.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandIndex3.rotation = _FPSBodyRig.LeftHandIndex3.rotation * Quaternion.Euler(LeftFingersOffset);
 
-                _fullBodyRig.LeftHandMiddle1.rotation = _FPSBodyRig.LeftHandMiddle1.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandMiddle2.rotation = _FPSBodyRig.LeftHandMiddle2.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandMiddle3.rotation = _FPSBodyRig.LeftHandMiddle3.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandMiddle1.rotation = _FPSBodyRig.LeftHandMiddle1.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandMiddle2.rotation = _FPSBodyRig.LeftHandMiddle2.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandMiddle3.rotation = _FPSBodyRig.LeftHandMiddle3.rotation * Quaternion.Euler(LeftFingersOffset);
 
-                _fullBodyRig.LeftHandRing1.rotation = _FPSBodyRig.LeftHandRing1.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandRing2.rotation = _FPSBodyRig.LeftHandRing2.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandRing3.rotation = _FPSBodyRig.LeftHandRing3.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandRing1.rotation = _FPSBodyRig.LeftHandRing1.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandRing2.rotation = _FPSBodyRig.LeftHandRing2.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandRing3.rotation = _FPSBodyRig.LeftHandRing3.rotation * Quaternion.Euler(LeftFingersOffset);
 
-                _fullBodyRig.LeftHandPinky1.rotation = _FPSBodyRig.LeftHandPinky1.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandPinky2.rotation = _FPSBodyRig.LeftHandPinky2.rotation * Quaternion.Euler(LeftFingersOffset);
-                _fullBodyRig.LeftHandPinky3.rotation = _FPSBodyRig.LeftHandPinky3.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandPinky1.rotation = _FPSBodyRig.LeftHandPinky1.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandPinky2.rotation = _FPSBodyRig.LeftHandPinky2.rotation * Quaternion.Euler(LeftFingersOffset);
+            _fullBodyRig.LeftHandPinky3.rotation = _FPSBodyRig.LeftHandPinky3.rotation * Quaternion.Euler(LeftFingersOffset);
 
 
 
@@ -238,41 +243,40 @@ namespace PlanetMaenad.FPS
 
 
 
-                _fullBodyRig.RightShoulder.position = _FPSBodyRig.RightShoulder.position;
-                _fullBodyRig.RightShoulder.rotation = _FPSBodyRig.RightShoulder.rotation * Quaternion.Euler(90, 90, RightShoulderOffset.z);
+            _fullBodyRig.RightShoulder.position = _FPSBodyRig.RightShoulder.position;
+            _fullBodyRig.RightShoulder.rotation = _FPSBodyRig.RightShoulder.rotation * Quaternion.Euler(90, 90, RightShoulderOffset.z);
 
-                _fullBodyRig.RightArm.position = _FPSBodyRig.RightArm.position;
-                _fullBodyRig.RightArm.rotation = _FPSBodyRig.RightArm.rotation * Quaternion.Euler(RightArmsOffset);
+            _fullBodyRig.RightArm.position = _FPSBodyRig.RightArm.position;
+            _fullBodyRig.RightArm.rotation = _FPSBodyRig.RightArm.rotation * Quaternion.Euler(RightArmsOffset);
 
-                _fullBodyRig.RightForeArm.position = _FPSBodyRig.RightForeArm.position;
-                _fullBodyRig.RightForeArm.rotation = _FPSBodyRig.RightForeArm.rotation * Quaternion.Euler(RightArmsOffset);
+            _fullBodyRig.RightForeArm.position = _FPSBodyRig.RightForeArm.position;
+            _fullBodyRig.RightForeArm.rotation = _FPSBodyRig.RightForeArm.rotation * Quaternion.Euler(RightArmsOffset);
 
-                _fullBodyRig.RightHand.position = _FPSBodyRig.RightHand.position;
-                _fullBodyRig.RightHand.rotation = _FPSBodyRig.RightHand.rotation * Quaternion.Euler(RightArmsOffset);
-
-
+            _fullBodyRig.RightHand.position = _FPSBodyRig.RightHand.position;
+            _fullBodyRig.RightHand.rotation = _FPSBodyRig.RightHand.rotation * Quaternion.Euler(RightArmsOffset);
 
 
-                _fullBodyRig.RightHandThumb1.rotation = _FPSBodyRig.RightHandThumb1.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandThumb2.rotation = _FPSBodyRig.RightHandThumb2.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandThumb3.rotation = _FPSBodyRig.RightHandThumb3.rotation * Quaternion.Euler(RightFingersOffset);
 
-                _fullBodyRig.RightHandIndex1.rotation = _FPSBodyRig.RightHandIndex1.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandIndex2.rotation = _FPSBodyRig.RightHandIndex2.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandIndex3.rotation = _FPSBodyRig.RightHandIndex3.rotation * Quaternion.Euler(RightFingersOffset);
 
-                _fullBodyRig.RightHandMiddle1.rotation = _FPSBodyRig.RightHandMiddle1.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandMiddle2.rotation = _FPSBodyRig.RightHandMiddle2.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandMiddle3.rotation = _FPSBodyRig.RightHandMiddle3.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandThumb1.rotation = _FPSBodyRig.RightHandThumb1.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandThumb2.rotation = _FPSBodyRig.RightHandThumb2.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandThumb3.rotation = _FPSBodyRig.RightHandThumb3.rotation * Quaternion.Euler(RightFingersOffset);
 
-                _fullBodyRig.RightHandRing1.rotation = _FPSBodyRig.RightHandRing1.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandRing2.rotation = _FPSBodyRig.RightHandRing2.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandRing3.rotation = _FPSBodyRig.RightHandRing3.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandIndex1.rotation = _FPSBodyRig.RightHandIndex1.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandIndex2.rotation = _FPSBodyRig.RightHandIndex2.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandIndex3.rotation = _FPSBodyRig.RightHandIndex3.rotation * Quaternion.Euler(RightFingersOffset);
 
-                _fullBodyRig.RightHandPinky1.rotation = _FPSBodyRig.RightHandPinky1.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandPinky2.rotation = _FPSBodyRig.RightHandPinky2.rotation * Quaternion.Euler(RightFingersOffset);
-                _fullBodyRig.RightHandPinky3.rotation = _FPSBodyRig.RightHandPinky3.rotation * Quaternion.Euler(RightFingersOffset);
-            }
+            _fullBodyRig.RightHandMiddle1.rotation = _FPSBodyRig.RightHandMiddle1.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandMiddle2.rotation = _FPSBodyRig.RightHandMiddle2.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandMiddle3.rotation = _FPSBodyRig.RightHandMiddle3.rotation * Quaternion.Euler(RightFingersOffset);
+
+            _fullBodyRig.RightHandRing1.rotation = _FPSBodyRig.RightHandRing1.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandRing2.rotation = _FPSBodyRig.RightHandRing2.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandRing3.rotation = _FPSBodyRig.RightHandRing3.rotation * Quaternion.Euler(RightFingersOffset);
+
+            _fullBodyRig.RightHandPinky1.rotation = _FPSBodyRig.RightHandPinky1.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandPinky2.rotation = _FPSBodyRig.RightHandPinky2.rotation * Quaternion.Euler(RightFingersOffset);
+            _fullBodyRig.RightHandPinky3.rotation = _FPSBodyRig.RightHandPinky3.rotation * Quaternion.Euler(RightFingersOffset);
         }
 
         public void ToggleDeathPostProfile(bool Bool)
