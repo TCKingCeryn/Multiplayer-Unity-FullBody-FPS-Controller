@@ -176,13 +176,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsPlayer: 0
   PlayerController: {fileID: 0}
-  PlayerDamageCrosshair: {fileID: 0}
+  IsAi: 0
+  AIController: {fileID: 0}
   RootCharacter: {fileID: 0}
   ForceForwardTransform: {fileID: 0}
   Trigger: {fileID: 5919551815285363628}
+  hitReaction: Hit
   HitLayers:
     serializedVersion: 2
-    m_Bits: 1792
+    m_Bits: 1793
   DamageTags:
   - Player
   - Companion
