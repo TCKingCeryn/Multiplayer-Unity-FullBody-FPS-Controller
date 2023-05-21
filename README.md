@@ -1,7 +1,7 @@
 # Multiplayer Unity FullBody FPS Controller
 
 A test project for a Unity Multiplayer game with Mirror networking.  Built to test a potential workflow with remote artists and programmers.
-Includes a basic Waiting Room setup, as well as direct Host/Client connection.  Currently limited to Local IPV4 adress for testing.
+Includes a basic Waiting Room setup, as well as direct Host/Client connection.  Currently limited to Local IPV4 address for testing.
 
 Built on my Free Open-Source FullBody FPS Controller, found here:
 https://github.com/TCKingCeryn/Darktide-40K-in-Unity-FullBody-FPS-Controller
