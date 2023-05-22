@@ -13,8 +13,8 @@ namespace PlanetMaenad.FPS
     public class Mirror_FPSArmsController : MonoBehaviour
     {
         public Mirror_MasterPlayerController PlayerController;
-        //public GameObject MainCam;
         [Space(10)]
+
 
         public Transform ArmsPivot;
         public Transform MiddleSpineBone;
@@ -31,10 +31,14 @@ namespace PlanetMaenad.FPS
         [Space(10)]
 
 
-        internal float pitch = 0f;
-        internal float yaw = 0f;
-        internal float relativeYaw = 0f;
+        public float NetworkedYaw;
+        public float NetworkedPitch;
+        [Space(5)]
+        public float yaw = 0f;
+        public float pitch = 0f;
         [Space(10)]
+
+
 
 
 
@@ -50,10 +54,15 @@ namespace PlanetMaenad.FPS
 
 
 
+        public GameObject FullBodyArmatureRoot;
+        public GameObject FPSArmatureRoot;
+        [Space(5)]
 
         public FullBodyRig _fullBodyRig;
         public FPSBodyRig _FPSBodyRig;
 
+
+        internal float relativeYaw = 0f;
 
 
 
@@ -178,15 +187,17 @@ namespace PlanetMaenad.FPS
         }
 
 
-        public void LocalCameraRotate()
+        public void HandleInput()
         {
             //Get input to turn the cam view
             relativeYaw = Input.GetAxis("Mouse X") * Sensitivity;
             pitch -= Input.GetAxis("Mouse Y") * Sensitivity;
-
             yaw += Input.GetAxis("Mouse X") * Sensitivity;
-            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
+            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+        }
+        public void LocalCameraRotate()
+        {
             ArmsPivot.transform.eulerAngles = new Vector3(pitch, yaw, 0f);
             ArmsPivot.transform.position = MiddleSpineBone.position;
 
@@ -195,12 +206,14 @@ namespace PlanetMaenad.FPS
         }
         public void NonLocalCameraRotate()
         {
-            //ArmsPivot.transform.eulerAngles = new Vector3(pitch, yaw, 0f);
+            ArmsPivot.transform.eulerAngles = new Vector3(NetworkedPitch, NetworkedYaw, 0f);
             ArmsPivot.transform.position = MiddleSpineBone.position;
 
             //Rotate Spine 
             if (MiddleSpineBone) MiddleSpineBone.rotation = ArmsPivot.transform.rotation;
         }
+
+
         public void HandleLockBones()
         {
             _fullBodyRig.LeftShoulder.position = _FPSBodyRig.LeftShoulder.position;
@@ -279,6 +292,96 @@ namespace PlanetMaenad.FPS
             _fullBodyRig.RightHandPinky3.rotation = _FPSBodyRig.RightHandPinky3.rotation * Quaternion.Euler(RightFingersOffset);
         }
 
+        public void FindArmsBones()
+        {
+            foreach (Transform child in FPSArmatureRoot.GetComponentsInChildren<Transform>())
+            {
+
+                if (child.name.Contains("LArmCollarbone"))
+                {
+                    _FPSBodyRig.LeftShoulder = child.transform;
+                }
+                if (child.name.Contains("LArm1"))
+                {
+                    _FPSBodyRig.LeftArm = child.transform;
+                }
+                if (child.name.Contains("LArm21"))
+                {
+                    _FPSBodyRig.LeftForeArm = child.transform;
+                }
+                if (child.name.Contains("LArmPalm"))
+                {
+                    _FPSBodyRig.LeftHand = child.transform;
+                }
+
+
+                if (child.name.Contains("RArmCollarbone"))
+                {
+                    _FPSBodyRig.RightShoulder = child.transform;
+                }
+                if (child.name.Contains("RArm1"))
+                {
+                    _FPSBodyRig.LeftShoulder = child.transform;
+                }
+                if (child.name.Contains("RArm21"))
+                {
+                    _FPSBodyRig.RightArm = child.transform;
+                }
+                if (child.name.Contains("RArmPalm"))
+                {
+                    _FPSBodyRig.RightHand = child.transform;
+                }
+
+            }
+
+        }
+        public void FindBodyBones()
+        {
+            foreach (Transform child in FullBodyArmatureRoot.GetComponentsInChildren<Transform>())
+            {
+
+                if (child.name.Contains("Left_Shoulder"))
+                {
+                    _fullBodyRig.LeftShoulder = child.transform;
+                }
+                if (child.name.Contains("Left_UpperArm"))
+                {
+                    _fullBodyRig.LeftArm = child.transform;
+                }
+                if (child.name.Contains("Left_LowerArm"))
+                {
+                    _fullBodyRig.LeftForeArm = child.transform;
+                }
+                if (child.name.Contains("Left_Hand"))
+                {
+                    _fullBodyRig.LeftHand = child.transform;
+                }
+
+
+                if (child.name.Contains("Right_Shoulder"))
+                {
+                    _fullBodyRig.RightShoulder = child.transform;
+                }
+                if (child.name.Contains("Right_UpperArm"))
+                {
+                    _fullBodyRig.RightArm = child.transform;
+                }
+                if (child.name.Contains("Right_LowerArm"))
+                {
+                    _fullBodyRig.RightForeArm = child.transform;
+                }
+                if (child.name.Contains("Right_Hand"))
+                {
+                    _fullBodyRig.RightHand = child.transform;
+                }
+
+            }
+
+        }
+
+
+
+
         public void ToggleDeathPostProfile(bool Bool)
         {
             DeathVolume.enabled = Bool;
@@ -323,6 +426,23 @@ namespace PlanetMaenad.FPS
             if (GUILayout.Button("Lock FullBody Arms"))
             {
                 Mirror_FPSArmsController.HandleLockBones();
+            }
+
+
+            EditorGUILayout.LabelField("_____________________________________________________________________________");
+
+            GUILayout.Space(10);
+            GUI.backgroundColor = Color.green;
+            if (GUILayout.Button("Find Arms Bones"))
+            {
+                Mirror_FPSArmsController.FindArmsBones();
+            }
+            GUILayout.Space(5);
+            GUI.backgroundColor = Color.green;
+            if (GUILayout.Button("Find Body Bones"))
+            {
+                Mirror_FPSArmsController.FindBodyBones();
+
             }
 
         }

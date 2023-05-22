@@ -62,7 +62,7 @@ namespace PlanetMaenad.FPS
 
 
         public float weaponsSwapTime = .25f;
-        [SyncVar]
+        [SyncVar(hook = nameof(OnChangeWeapon))]
         public int equippedWeaponIndex = 0;
         public Mirror_FPSWeapon[] weapons;
         [Space(10)]
@@ -156,7 +156,7 @@ namespace PlanetMaenad.FPS
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
 
-                CmdChangeWeapon();
+                ChangeWeapon(0);
             }
 
         }
@@ -183,6 +183,7 @@ namespace PlanetMaenad.FPS
             if (!isLocalPlayer)
             {
                 PlayerArmsController.NonLocalCameraRotate();
+
                 if (LockFullbodyArms) PlayerArmsController.HandleLockBones();
 
                 return;
@@ -190,7 +191,14 @@ namespace PlanetMaenad.FPS
 
             if (isLocalPlayer)
             {
-                if (!Cursor.visible) PlayerArmsController.LocalCameraRotate();
+                if (!Cursor.visible)
+                {
+                    PlayerArmsController.HandleInput();                   
+                }
+
+                PlayerArmsController.LocalCameraRotate();
+                if (NetworkClient.ready) CmdSetCameraRotate(PlayerArmsController.yaw, PlayerArmsController.pitch);
+
                 if (LockFullbodyArms) PlayerArmsController.HandleLockBones();
             }
         }
@@ -245,21 +253,7 @@ namespace PlanetMaenad.FPS
             //Swap Weapons
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                equippedWeaponIndex++;
-                CmdChangeEquippedWeaponIndex(equippedWeaponIndex);
-
-                //Reset to First
-                if (equippedWeaponIndex >= weapons.Length)
-                {
-                    CmdChangeEquippedWeaponIndex(0);
-                }
-                //Set to Next
-                if (equippedWeaponIndex < 0)
-                {
-                    CmdChangeEquippedWeaponIndex(weapons.Length - 1);
-                }
-
-                CmdChangeWeapon();
+                CmdCycleEquippedWeaponIndex();
             }
         }
 
@@ -303,50 +297,47 @@ namespace PlanetMaenad.FPS
         }
 
 
-
         [Command(requiresAuthority = false)]
-        public void CmdChangeEquippedWeaponIndex(int IndexNew)
+        public void CmdCycleEquippedWeaponIndex()
         {
-            equippedWeaponIndex = IndexNew;
-        }
-
-
-        [Command(requiresAuthority = false)]
-        public void CmdChangeWeapon()
-        {
-            if (!NetworkClient.active)
+            //Reset to First
+            if (equippedWeaponIndex >= weapons.Length -1)
             {
-                ChangeWeapon();
+                equippedWeaponIndex = 0;
             }
-
-            RpcChangeWeapon();
+            if (equippedWeaponIndex < weapons.Length - 1)
+            {
+                equippedWeaponIndex++;
+            }
         }
-        [ClientRpc]
-        void RpcChangeWeapon()
+        void OnChangeWeapon(int Old, int New)
         {
-            ChangeWeapon();
+            ChangeWeapon(New);
         }
-        void ChangeWeapon()
-        {
-            var selectedWeapon = weapons[equippedWeaponIndex];
 
-            Invoke("SwapWeapons", weaponsSwapTime);
+
+        public void ChangeWeapon(int index)
+        {
+            var selectedWeapon = weapons[index];
 
             foreach (Mirror_FPSWeapon weapon in weapons)
             {
                 weapon.swapping = true;
             }
 
+            SwapWeapons(index);
+            //Invoke("SwapWeapons", weaponsSwapTime);
+
             BodyAnimator.SetBool("Unequip", true);
         }
-        void SwapWeapons()
+        void SwapWeapons(int index)
         {
-            var selectedWeapon = weapons[equippedWeaponIndex];
+            var selectedWeapon = weapons[index];
 
             //Set every other weapon except the one we want to swap to at index to false
             for (int i = 0; i < weapons.Length; i++)
             {
-                if (i != equippedWeaponIndex)
+                if (i != index)
                 {
                     weapons[i].gameObject.SetActive(false);
 
@@ -363,6 +354,7 @@ namespace PlanetMaenad.FPS
 
             //Set desired weapon to active
             selectedWeapon.gameObject.SetActive(true);
+
             if (selectedWeapon.SecondaryObjects.Length > 0)
             {
                 for (int s = 0; s < selectedWeapon.SecondaryObjects.Length; s++)
@@ -371,25 +363,22 @@ namespace PlanetMaenad.FPS
                 }
             }
 
-
-            Invoke("SetSwappedWeaponPositions", .01f);
+            SetSwappedWeaponPositions(index);
+            //Invoke("SetSwappedWeaponPositions", .01f);
 
             BodyAnimator.SetBool("Unequip", false);
         }
-        void SetSwappedWeaponPositions()
+        void SetSwappedWeaponPositions(int index)
         {
-            var selectedWeapon = weapons[equippedWeaponIndex];
-
-            //Initialize the correct original aim position if it is the first time swapping
-
-            BodyAnimator.SetFloat("MoveSetID", selectedWeapon.MoveSetID);
-            ArmsAnimator.SetFloat("MoveSetID", selectedWeapon.MoveSetID);
-
+            var selectedWeapon = weapons[index];
 
             foreach (Mirror_FPSWeapon weapon in weapons)
             {
                 weapon.swapping = false;
             }
+
+            BodyAnimator.SetFloat("MoveSetID", selectedWeapon.MoveSetID);
+            ArmsAnimator.SetFloat("MoveSetID", selectedWeapon.MoveSetID);
         }
 
 
@@ -480,14 +469,33 @@ namespace PlanetMaenad.FPS
 
         #endregion
 
-        [Command(requiresAuthority = false)]
-        public void CmdSetLockFullbodyArms(bool Bool)
-        {
-            LockFullbodyArms = Bool;
-        }
+
+
 
 
         #region Arms Controls
+
+        [Command(requiresAuthority = false)]
+        void CmdSetCameraRotate(float newYaw, float newPitch)
+        {
+            if (!NetworkClient.active)
+            {
+                //Get input to turn the cam view
+                PlayerArmsController.NetworkedYaw = newYaw;
+                PlayerArmsController.NetworkedPitch = newPitch;
+            }
+
+            RpcSetSpineRotation(newYaw, newPitch);
+        }
+        [ClientRpc]
+        void RpcSetSpineRotation(float newYaw, float newPitch)
+        {
+            //Get input to turn the cam view
+            PlayerArmsController.NetworkedYaw = newYaw;
+            PlayerArmsController.NetworkedPitch = newPitch;
+        }
+
+
 
         [Command(requiresAuthority = false)]
         public void CmdPlayArmsAnimation(string clipName)
@@ -525,6 +533,13 @@ namespace PlanetMaenad.FPS
         #endregion
 
         #region Body Controls
+
+        [Command(requiresAuthority = false)]
+        public void CmdSetLockFullbodyArms(bool Bool)
+        {
+            LockFullbodyArms = Bool;
+        }
+
 
         [Command(requiresAuthority = false)]
         public void CmdPlayBodyAnimation(string clipName)

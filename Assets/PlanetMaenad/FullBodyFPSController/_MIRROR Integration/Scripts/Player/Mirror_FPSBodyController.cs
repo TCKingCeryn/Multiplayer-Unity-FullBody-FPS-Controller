@@ -167,7 +167,7 @@ namespace PlanetMaenad.FPS
 
             horizontalInput = move.x;
             verticalInput = move.y;
-            m_ForwardAmount = verticalInput;
+            m_ForwardAmount = IsSprinting ? verticalInput * 1.5f : verticalInput;
 
             _animator.SetBool("IsGrounded", IsGrounded);
             _animator.SetBool("IsJumping", jump);

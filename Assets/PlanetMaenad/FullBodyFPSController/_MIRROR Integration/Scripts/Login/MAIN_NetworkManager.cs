@@ -24,7 +24,6 @@ namespace PlanetMaenad.FPS
         //bool isInTransition;
 
 
-
         public UnityEvent OnStartServerEvent;
         public UnityEvent OnStopServerEvent;
         [Space(10)]
@@ -42,10 +41,24 @@ namespace PlanetMaenad.FPS
             OnStartClientEvent.Invoke();
         }
 
-        public override void OnServerDisconnect(NetworkConnectionToClient conn)
+
+        public override void OnStopHost()
         {
             OnStopServerEvent.Invoke();
+            Debug.Log("Server Stopped");
+        }
 
+        public override void OnStopClient()
+        {
+            OnStopClientEvent.Invoke();
+            Debug.Log("Client Stopped");
+        }
+
+
+
+
+        public override void OnServerDisconnect(NetworkConnectionToClient conn)
+        {
             // remove player name from the HashSet
             if (conn.authenticationData != null)
                 Mirror_MasterPlayerController.playerNames.Remove((string)conn.authenticationData);
@@ -57,10 +70,7 @@ namespace PlanetMaenad.FPS
         }
         public override void OnClientDisconnect()
         {
-            OnStopClientEvent.Invoke();
-
             base.OnClientDisconnect();
-            MAIN_LoginManager.instance.gameObject.SetActive(true);
         }
 
 

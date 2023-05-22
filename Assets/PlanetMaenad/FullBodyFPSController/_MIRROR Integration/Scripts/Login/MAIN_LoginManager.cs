@@ -14,6 +14,9 @@ namespace PlanetMaenad.FPS
         [Space(10)]
 
 
+        public int PlayerPrefabIndex;
+        public GameObject[] PlayerPreviewObjects;
+        [Space(10)]
 
         public GameObject LoginUI;
         public Button[] MenuButtons;
@@ -30,7 +33,17 @@ namespace PlanetMaenad.FPS
         }
 
 
+        public void SetPlayerPrefab(int Index)
+        {
+            NetworkManager.PlayerPrefabIndex = Index;
 
+            for (int i = 0; i < PlayerPreviewObjects.Length; i++)  //The "iBall" for-loop Goes through all of the Array.
+            {
+                PlayerPreviewObjects[i].SetActive(false);
+            }
+
+            PlayerPreviewObjects[Index].SetActive(true);
+        }
         public void SetNewName(string PlayerName)
         {
             ChatAuthenticator.SetPlayerName(PlayerName);
@@ -42,6 +55,8 @@ namespace PlanetMaenad.FPS
         {
             NetworkManager.SetHostname(HostName);
         }
+
+
 
         public void StartHost()
         {
@@ -62,11 +77,11 @@ namespace PlanetMaenad.FPS
             }
         }
 
-
         public void QuitApplication()
         {
             Application.Quit();
         }
+
 
 
         public void ToggleButtons(string username)

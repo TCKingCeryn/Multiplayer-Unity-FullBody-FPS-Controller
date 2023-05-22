@@ -165,7 +165,7 @@ namespace PlanetMaenad.FPS
 
                 }
 
-                CmdChangeHealth(damage);
+                if (NetworkClient.ready) CmdChangeHealth(damage);
                 //health -= damage;
 
                 //Death

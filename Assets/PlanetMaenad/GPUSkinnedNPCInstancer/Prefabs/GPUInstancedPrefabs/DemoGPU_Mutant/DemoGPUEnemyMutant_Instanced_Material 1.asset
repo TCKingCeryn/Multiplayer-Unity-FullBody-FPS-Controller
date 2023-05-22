@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: DemoGPUEnemyMutant_Instanced_Material 1
-  m_Shader: {fileID: 4800000, guid: 772a0c113a6bd9641a7af7240cad6156, type: 3}
+  m_Shader: {fileID: 4800000, guid: 5ea08f9901b7629498c6d52cb323613a, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -75,9 +75,9 @@ Material:
     - _EndFrame: 0
     - _FrameCount: 1
     - _GlossMapScale: 1
-    - _Glossiness: 0.297
+    - _Glossiness: 0.367
     - _GlossyReflections: 1
-    - _Metallic: 0.129
+    - _Metallic: 0.136
     - _Mode: 0
     - _OcclusionStrength: 1
     - _OffsetSeconds: 0

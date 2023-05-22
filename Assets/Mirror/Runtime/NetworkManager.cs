@@ -78,6 +78,8 @@ namespace Mirror
         [FormerlySerializedAs("m_PlayerPrefab")]
         [Tooltip("Prefab of the player object. Prefab must have a Network Identity component. May be an empty game object or a full avatar.")]
         public GameObject playerPrefab;
+        public int PlayerPrefabIndex;
+        public GameObject[] PlayerPrefabs;
 
         /// <summary>Enable to automatically create player objects on connect and on scene change.</summary>
         [FormerlySerializedAs("m_AutoCreatePlayer")]
@@ -141,18 +143,23 @@ namespace Mirror
             // always >= 0
             maxConnections = Mathf.Max(maxConnections, 0);
 
-            if (playerPrefab != null && playerPrefab.GetComponent<NetworkIdentity>() == null)
-            {
-                Debug.LogError("NetworkManager - Player Prefab must have a NetworkIdentity.");
-                playerPrefab = null;
-            }
+            //START MODIFIED CODE
 
-            // This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
-            if (playerPrefab != null && spawnPrefabs.Contains(playerPrefab))
-            {
-                Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
-                spawnPrefabs.Remove(playerPrefab);
-            }
+            //if (playerPrefab != null && playerPrefab.GetComponent<NetworkIdentity>() == null)
+            //{
+            //    Debug.LogError("NetworkManager - Player Prefab must have a NetworkIdentity.");
+            //    playerPrefab = null;
+            //}
+
+            //// This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
+            //if (playerPrefab != null && spawnPrefabs.Contains(playerPrefab))
+            //{
+            //    Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
+            //    spawnPrefabs.Remove(playerPrefab);
+            //}
+
+            //END MODIFIED CODE
+
         }
 
         // virtual so that inheriting classes' Reset() can call base.Reset() too
@@ -1291,12 +1298,11 @@ namespace Mirror
         public virtual void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
             Transform startPos = GetStartPosition();
-            GameObject player = startPos != null
-                ? Instantiate(playerPrefab, startPos.position, startPos.rotation)
-                : Instantiate(playerPrefab);
-
 
             //START MODIFIED CODE
+
+            GameObject player = startPos != null ? Instantiate(PlayerPrefabs[PlayerPrefabIndex], startPos.position, startPos.rotation) : Instantiate(PlayerPrefabs[PlayerPrefabIndex]);
+            //GameObject player = startPos != null ? Instantiate(playerPrefab, startPos.position, startPos.rotation) : Instantiate(playerPrefab);
 
             // instantiating a "Player" prefab gives it the name "Player(clone)"
             // => appending the connectionId is WAY more useful for debugging!
